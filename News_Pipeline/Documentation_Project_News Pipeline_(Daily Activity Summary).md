@@ -43,7 +43,7 @@
 
 ---------------------------------------------------------------------
 
-#### 2024/10/26 - 1403/08/05
+##### 2024/10/26 - 1403/08/05
 
 - **Start Project: News_API_Builder_2**
 - **Create Virtual Environment** (News_API_Builder_2)
@@ -82,4 +82,23 @@
       - `py manage.py test News_Page_App_2`
 
 -----------------------------------------------------------------
+
+##### 2024/10/27 - 1403/08/06
+
+- Start Zoomit_Scraper Project
+- **Create Virtual Environment**: (Zoomit_Scraper)
+	- `py -m venv Zoomit_Scraper`
+- Install required packages:
+    - `pip install Django`
+    - `pip install scrapy`
+- **Initialize Scrapy Project**
+	- `scrapy startproject Zoomit_Product`
+  - Create spider:
+	  - `scrapy genspider Zoomit_Spider zoomit.ir`
+- **Configure Spider and Test Crawling**
+  - Add source URLs and test the spider:
+    - `scrapy crawl Zoomit_Spider -o Zoomit_Product_Data.json`
+- **Review robots.txt** for zoomit.ir
+  - URL: [https://www.zoomit.ir/robots.txt](https://www.zoomit.ir/robots.txt)
+- **Develop Scraper Logic**
 
