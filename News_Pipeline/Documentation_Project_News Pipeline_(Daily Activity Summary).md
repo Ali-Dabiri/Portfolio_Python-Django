@@ -102,3 +102,24 @@
   - URL: [https://www.zoomit.ir/robots.txt](https://www.zoomit.ir/robots.txt)
 - **Develop Scraper Logic**
 
+------------------------------------------------------------------
+
+##### 2024/10/28 - 1403/08/07
+
+- **Start Scrapy Project** (`Zoomit_News_Search`)
+    - Initialize project: `scrapy startproject Zoomit_News_Search`
+    - Generate spider: `scrapy genspider Zoomit_News_Search_Spider zoomit.ir`
+- **Add Source URL and Test Spider**
+    - Run spider and save output to JSON: `scrapy crawl Zoomit_News_Search_Spider -o Zoomit_News_Search_Data.json`
+- **Update Settings**  
+    - Set `ROBOTSTXT_OBEY = False` in settings
+- **Install Required Packages**  
+    - `pip install selenium`
+    - `pip install webdriver-manager`
+
+---------------------------
+
+##### 2024/10/29 - 1403/08/08
+
+- **Develop Project** (`Zoomit_News_Search`)
+    - Implement functionality to click the "View More" button
