@@ -24,7 +24,8 @@ class ZoomitNewsSearchSpiderSpider(scrapy.Spider):
         try:
             button_close_advertise = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='__next']/div[2]/div[4]/div/button")))
             button_close_advertise.click()
-            while True:    
+            counter = 0
+            while counter <= 5:    
                 button_view_more = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='__next']/div[2]/div[1]/div[4]/div/div/div/div/ul/button/div")))
                 button_view_more.click()
                 time.sleep(10)
