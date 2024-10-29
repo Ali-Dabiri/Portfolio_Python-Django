@@ -29,6 +29,7 @@ class ZoomitNewsSearchSpiderSpider(scrapy.Spider):
                 button_view_more = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='__next']/div[2]/div[1]/div[4]/div/div/div/div/ul/button/div")))
                 button_view_more.click()
                 time.sleep(10)
+                counter += 1
         except Exception:
             self.logger.info("Erro for button view more.")
 
