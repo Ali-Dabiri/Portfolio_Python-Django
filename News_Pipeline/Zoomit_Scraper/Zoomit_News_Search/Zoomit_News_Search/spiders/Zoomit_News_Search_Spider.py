@@ -1,24 +1,35 @@
 import scrapy
 import scrapy.selector
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
-class ZoomitNewsSearchSpider(scrapy.Spider):
+class ZoomitNewsSearchSpiderSpider(scrapy.Spider):
     name = "Zoomit_News_Search_Spider"
     allowed_domains = ["zoomit.ir"]
     start_urls = ["https://www.zoomit.ir/search/news/"]
 
     def __init__(self, *args, **kwargs):
-        super(ZoomitNewsSearchSpider, self).__init__(*args, **kwargs)
+        super(ZoomitNewsSearchSpiderSpider, self).__init__(*args, **kwargs)
         self.driver = webdriver.Chrome()
 
-
     def parse(self, response):
-        #source_url = response.url
         self.driver.get(response.url)
         source_url = self.driver.current_url
         time.sleep(3)
+     
+        try:
+            button_close_advertise = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='__next']/div[2]/div[4]/div/button")))
+            button_close_advertise.click()
+            while True:    
+                button_view_more = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='__next']/div[2]/div[1]/div[4]/div/div/div/div/ul/button/div")))
+                button_view_more.click()
+                time.sleep(10)
+        except Exception:
+            self.logger.info("Erro for button view more.")
 
         page_source = self.driver.page_source
         scrapy_selector = scrapy.Selector(text=page_source)
@@ -46,4 +57,6 @@ class ZoomitNewsSearchSpider(scrapy.Spider):
                 "News Image": news_image,
                 "News Study Time": news_study_time
             }
+    def close(self):
+        self.driver.quit()
 
