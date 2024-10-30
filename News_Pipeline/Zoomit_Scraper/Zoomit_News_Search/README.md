@@ -30,7 +30,7 @@ This is a Scrapy project that uses Selenium to scrape news data from [Zoomit.ir]
     ```
 2. Navigate to the project directory:
     ```bash
-    cd ZoomitNewsSearchSpider
+    cd Zoomit_News_Search
     ```
 3. Install the required packages:
     ```bash
