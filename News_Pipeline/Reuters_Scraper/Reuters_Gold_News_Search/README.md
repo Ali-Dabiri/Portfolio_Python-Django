@@ -1,6 +1,6 @@
 # Reuters Gold News Search
 
-A Python-based web scraping project using Selenium to search for and extract news articles related to commodities, specifically gold, from the Reuters website. The script automates the process of navigating through pages, handling pop-ups, and saving extracted news data into a CSV file.
+This project is an enhanced Python-based web scraping tool using Selenium to extract news articles related to commodities, specifically gold, from the Reuters website. The script automates page navigation, scrolling, and extraction of news data from multiple pages, saving the results in a structured CSV file.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -43,21 +43,20 @@ python Reuters_Gold_News_Search.py
 ```
 
 The script will:
-1. Open the Reuters search page for "commodity gold."
-2. Handle cookie consent and pop-up windows.
-3. Scroll through the page to load news articles.
-4. Extract article titles from multiple pages.
-5. Save the extracted data to `Reuters_Gold_News_Search_Data.csv`.
+1. Navigate to the Reuters search page for "commodity gold."
+2. Manage cookies and dismiss pop-ups.
+3. Scroll through pages, navigate to the next page, and gather article titles.
+4. Save extracted data from multiple pages into `Reuters_Gold_News_Search_Data.csv`.
 
 ## Project Structure
-- `Reuters_Gold_News_Search.py`: The main script for scraping Reuters.
-- `Reuters_Gold_News_Search_Data.csv`: The output file with URL, page title, and extracted news titles.
+- `Reuters_Gold_News_Search.py`: The main script for scraping Reuters across multiple pages.
+- `Reuters_Gold_News_Search_Data.csv`: Output file containing page URL, title, and news article titles.
 
 ## Output
 The extracted news titles are saved in a CSV file with the following columns:
-- **URL Address**: URL of the Reuters search page.
+- **URL Address**: The URL of each Reuters page.
 - **Page Title**: Title of the Reuters page.
-- **News Title**: Titles of the news articles found on the page.
+- **News Title**: Titles of news articles extracted from each page.
 
 ## License
 This project is licensed under the MIT License.
