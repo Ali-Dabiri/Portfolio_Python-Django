@@ -121,5 +121,69 @@
 
 ##### 2024/10/29 - 1403/08/08
 
-- **Develop Project** (`Zoomit_News_Search`)
-    - Implement functionality to click the "View More" button
+- **Developed Zoomit_News_Search project**
+    - Implemented functionality to click "view more" button for loading additional content.
+- **Started Scrapy Project: Zoomit_News_Search_Content**
+    - Command: `scrapy startproject Zoomit_News_Search_Content`
+    - Command: `scrapy genspider Zoomit_News_Search_Content_Spider zoomit.ir`
+- **Configured Settings**
+    - Set `ROBOTSTXT_OBEY = False` to allow unrestricted crawling.
+- **Added Source URL and Tested Spider**
+    - Command: `scrapy crawl Zoomit_News_Search_Content_Spider -o Zoomit_News_Search_Content_Data.json`
+- **Wrote Initial Scraper Logic**
+
+---------------------------
+
+##### 2024/10/30 - 1403/08/09
+
+- **Continued Zoomit_News_Search_Content Project**
+    - Extracted elements from each search results page using:
+        - `scrapy.Request`
+- **Started Reuters_Scraper**
+    - Command: `py -m venv Reuters_Scraper`
+    - Installed packages: `scrapy`, `selenium`, `webdriver-manager`
+- **Started Scrapy Project: Reuters_Gold_News_Search**
+    - Command: `scrapy startproject Reuters_Gold_News_Search`
+    - Command: `scrapy genspider Reuters_Gold_News_Search_Spider reuters.com`
+- **Reviewed robots.txt for reuters.com**
+    - URL: `https://www.reuters.com/robots.txt`
+- **Configured Settings**
+    - Set `ROBOTSTXT_OBEY = False` for full page access.
+- **Added Source URL and Tested Spider**
+    - Command: `scrapy crawl Reuters_Gold_News_Search_Spider -o Reuters_Gold_News_Search_Data.json`
+- **Wrote Initial Scraper Logic**
+
+----------------
+
+##### 2024/11/01 - 1403/08/11
+
+- **Continued Reuters_Gold_News_Search Project**
+    - Created `extract_cookies_reuters.py` using Selenium to handle site cookies (not supported with Scrapy).
+- **Rewrote Reuters_Gold_News_Search using Selenium Only**
+    - Added source URL and ran initial tests.
+
+---------------
+
+##### 2024/11/02 - 1403/08/12
+
+- **Continued Reuters_Gold_News_Search Project**
+    - **Selenium Configuration**: Optimized Chrome options for better cookie management and detection avoidance.
+    - **XPath vs. Class Name**: Found that XPath often provides more reliable element selection than class names.
+        - *Non-functional:* 
+            ```python
+            all_news_title = WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, "text__text__1FZLe text__dark-grey__3Ml43 text__medium__1kbOh text__heading_6__1qUJ5 heading__base__2T28j heading__heading_6__RtD9P")))
+            ```
+        - *Functional:* 
+            ```python
+            all_news_title = WebDriverWait(self.driver, 30).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[2]/ul/li/div/div/header/a/span")))
+            ```
+
+----------------------------
+
+##### 2024/11/03 - 1403/08/13
+
+- **Continued Reuters_Gold_News_Search Project**
+    - **Data Collection**: Successfully extracted news titles from multiple pages.
+    - **CSV Management**: Collected page URLs, titles, and news headlines, and saved them into a structured CSV file.
+    - **Enhanced Navigation**: Implemented scrolling functions to ensure complete page loading before data extraction.
+    - Defined `scroll_up` function for returning to top of page when necessary.
