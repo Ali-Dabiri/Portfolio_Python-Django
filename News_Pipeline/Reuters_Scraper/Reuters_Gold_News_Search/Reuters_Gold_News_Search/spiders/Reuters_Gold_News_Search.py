@@ -8,7 +8,6 @@ import time
 import csv
 
 
-
 class ReutersGoldNewsSearch:
     def __init__(self):
         self.option = webdriver.ChromeOptions()
@@ -28,8 +27,13 @@ class ReutersGoldNewsSearch:
 
     def scroll_down(self):
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(5)
+        time.sleep(10)
     
+    def scroll_up(self):
+        self.driver.execute_script("window.scrollTo(0, 0);")
+        time.sleep(3)
+    
+
     def parse(self):
         self.driver.get("https://www.reuters.com/site-search/?query=commodity+gold")
 
@@ -52,28 +56,63 @@ class ReutersGoldNewsSearch:
         except Exception as err:
             print(f"not found Accept Cookies = {err}")
 
+
         try:    
-            url_source = self.driver.current_url
-            page_title = self.driver.title
+            url_source_all_pages = []
+            page_title_all_pages = []
+            news_title_all_pages = []
+            counter_page = 0 
 
-            self.scroll_down()
-        
-            all_news_title = WebDriverWait(self.driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[2]/ul/li/div/div/header/a/span")))
-            news_title = [title.text for title in all_news_title]
-            if not news_title:
-                print("not found news_title.")        
+            while counter_page <= 5:            
+                self.scroll_down()
+                url_source = self.driver.current_url
+                url_source_all_pages.append(url_source)
+                
+                page_title = self.driver.title
+                page_title_all_pages.append(page_title)
 
+                all_news_title = WebDriverWait(self.driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[2]/ul/li/div/div/header/a/span")))
+                news_title = [title.text for title in all_news_title]
+                news_title_all_pages.extend(news_title)
+                if not news_title:
+                    print("not found news_title.")
+
+                self.scroll_up()
+                button_next_page = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[3]/button[2]")))
+                button_next_page.click()
+                time.sleep(3)
+                counter_page += 1
+
+        except Exception as err:
+            print(f"Error while navigating pages and gathering data = {err}")
+
+        try:
             with open("Reuters_Gold_News_Search_Data.csv", "w", newline='', encoding='utf-8') as csv_file:
                 csv_writer = csv.writer(csv_file)
                 csv_writer.writerow(["URL Address", "Page Title", "News Title"])
+                
+                length_news_title = len(news_title)
+                counter_lenght_news_title = 0
+                counter_url_source_all_pages = 0
+                counter_page_title_all_pages = 0
                 for (
-                    news_title
+                    counter_news_title_all_pages
                 ) in zip (
-                    news_title
+                    news_title_all_pages
                 ):
-                    csv_writer.writerow([url_source, page_title, ', '.join(news_title)])
+                    csv_writer.writerow([url_source_all_pages[counter_url_source_all_pages], 
+                                        page_title_all_pages[counter_page_title_all_pages], 
+                                        ', '.join(counter_news_title_all_pages)]
+                                        )
+                    if counter_lenght_news_title < length_news_title:
+                        counter_lenght_news_title += 1
+                    if counter_lenght_news_title == length_news_title:
+                        counter_url_source_all_pages += 1
+                        counter_page_title_all_pages += 1
+                        counter_lenght_news_title = 0
+    
         except Exception as err:
-            print(f"Data extraction error = {err}")
+            print(f"Error while writing data to CSV = {err}")
 
 if __name__ == "__main__":
     scraper = ReutersGoldNewsSearch()
