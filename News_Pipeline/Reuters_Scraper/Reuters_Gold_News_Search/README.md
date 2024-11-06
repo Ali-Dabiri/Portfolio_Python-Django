@@ -1,6 +1,6 @@
-# Reuters Gold News Search
+# Reuters Gold News Search (Enhanced Version)
 
-This project is an enhanced Python-based web scraping tool using Selenium to extract news articles related to commodities, specifically gold, from the Reuters website. The script automates page navigation, scrolling, and extraction of news data from multiple pages, saving the results in a structured CSV file.
+This project is an advanced Python-based web scraper developed using Selenium, designed to extract news articles related to commodities, specifically gold, from the Reuters website. The scraper navigates pages, extracts data, filters news from the past six months, and saves the results in a structured CSV file.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -31,32 +31,33 @@ pip install -r requirements.txt
 ```
 
 **Requirements include:**
-- `selenium`: To automate interactions with the Reuters website.
-- `webdriver_manager`: For automatically downloading and managing the ChromeDriver.
-- `chromedriver_autoinstaller`: To keep the driver updated.
+- `selenium`: For web interaction automation with Reuters.
+- `webdriver_manager`: For automatic ChromeDriver management.
+- `chromedriver_autoinstaller`: To ensure the latest version of ChromeDriver is always available.
 
 ## Usage
-To run the script, simply execute the following command:
+To execute the script, run:
 
 ```bash
 python Reuters_Gold_News_Search.py
 ```
 
-The script will:
-1. Navigate to the Reuters search page for "commodity gold."
-2. Manage cookies and dismiss pop-ups.
-3. Scroll through pages, navigate to the next page, and gather article titles.
-4. Save extracted data from multiple pages into `Reuters_Gold_News_Search_Data.csv`.
+The script performs the following steps:
+1. Navigates to the Reuters search page for "commodity gold."
+2. Handles cookies and pop-ups for smooth navigation.
+3. Scrolls through pages, retrieves article titles, and filters news from the last six months.
+4. Saves the extracted data into a CSV file named `Reuters_Gold_News_Search_Data.csv`.
 
 ## Project Structure
-- `Reuters_Gold_News_Search.py`: The main script for scraping Reuters across multiple pages.
-- `Reuters_Gold_News_Search_Data.csv`: Output file containing page URL, title, and news article titles.
+- `Reuters_Gold_News_Search.py`: The main script, including methods for page navigation, data extraction, and date-based filtering.
+- `Reuters_Gold_News_Search_Data.csv`: Output file containing page URL, title, news titles, and publication dates.
 
 ## Output
-The extracted news titles are saved in a CSV file with the following columns:
+The extracted data is saved in a CSV file with the following columns:
 - **URL Address**: The URL of each Reuters page.
-- **Page Title**: Title of the Reuters page.
-- **News Title**: Titles of news articles extracted from each page.
+- **Page Title**: The title of each Reuters page.
+- **News Title**: Extracted news titles.
+- **News Date**: Publication date of each news article, limited to the last six months.
 
 ## License
 This project is licensed under the MIT License.
