@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import time
 import csv
+from datetime import datetime, timedelta
 
 
 class ReutersGoldNewsSearch:
@@ -27,11 +28,11 @@ class ReutersGoldNewsSearch:
 
     def scroll_down(self):
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(10)
+        time.sleep(4)
     
     def scroll_up(self):
         self.driver.execute_script("window.scrollTo(0, 0);")
-        time.sleep(3)
+        time.sleep(4)
     
 
     def parse(self):
@@ -58,12 +59,17 @@ class ReutersGoldNewsSearch:
 
 
         try:    
+            six_months_ago = datetime.now() - timedelta(days=180)
+            date_time_compare = datetime.strftime(six_months_ago, '%Y-%m-%dT%H:%M:%SZ')
+            print("Six month ago:", six_months_ago)
+            print("Date time compare:", date_time_compare)
+
             url_source_all_pages = []
             page_title_all_pages = []
             news_title_all_pages = []
-            counter_page = 0 
+            news_date_all_pages = []
 
-            while counter_page <= 5:            
+            while date_time_compare:            
                 self.scroll_down()
                 url_source = self.driver.current_url
                 url_source_all_pages.append(url_source)
@@ -71,17 +77,27 @@ class ReutersGoldNewsSearch:
                 page_title = self.driver.title
                 page_title_all_pages.append(page_title)
 
-                all_news_title = WebDriverWait(self.driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[2]/ul/li/div/div/header/a/span")))
+                all_news_title = WebDriverWait(self.driver, 15).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[2]/ul/li/div/div/header/a/span")))
                 news_title = [title.text for title in all_news_title]
                 news_title_all_pages.extend(news_title)
                 if not news_title:
                     print("not found news_title.")
-
+                                                                                                                    
+                all_news_date = WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[2]/ul/li/div/div/time")))
+                news_date = [date.get_attribute('datetime') for date in all_news_date]
+                news_date_all_pages.extend(news_date)
+                if not news_date:
+                    print("not found news_date.")
+                                                                                                                    
                 self.scroll_up()
                 button_next_page = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='fusion-app']/div[2]/div[2]/div/div[2]/div[3]/button[2]")))
                 button_next_page.click()
                 time.sleep(3)
-                counter_page += 1
+                
+                if news_date_all_pages[-1] >= date_time_compare:
+                    continue
+                else:
+                    break
 
         except Exception as err:
             print(f"Error while navigating pages and gathering data = {err}")
@@ -89,28 +105,32 @@ class ReutersGoldNewsSearch:
         try:
             with open("Reuters_Gold_News_Search_Data.csv", "w", newline='', encoding='utf-8') as csv_file:
                 csv_writer = csv.writer(csv_file)
-                csv_writer.writerow(["URL Address", "Page Title", "News Title"])
+                csv_writer.writerow(["URL Address", "Page Title", "News Title", "News Date"])
                 
                 length_news_title = len(news_title)
-                counter_lenght_news_title = 0
+                counter_length_news_title = 0
                 counter_url_source_all_pages = 0
                 counter_page_title_all_pages = 0
                 for (
-                    counter_news_title_all_pages
+                    counter_news_title_all_pages,
+                    counter_news_date_all_pages
                 ) in zip (
-                    news_title_all_pages
+                    news_title_all_pages,
+                    news_date_all_pages
                 ):
-                    csv_writer.writerow([url_source_all_pages[counter_url_source_all_pages], 
-                                        page_title_all_pages[counter_page_title_all_pages], 
-                                        ', '.join(counter_news_title_all_pages)]
-                                        )
-                    if counter_lenght_news_title < length_news_title:
-                        counter_lenght_news_title += 1
-                    if counter_lenght_news_title == length_news_title:
-                        counter_url_source_all_pages += 1
-                        counter_page_title_all_pages += 1
-                        counter_lenght_news_title = 0
-    
+                    if counter_news_date_all_pages >= date_time_compare:
+                        csv_writer.writerow([url_source_all_pages[counter_url_source_all_pages], 
+                                            page_title_all_pages[counter_page_title_all_pages], 
+                                            counter_news_title_all_pages,
+                                            counter_news_date_all_pages]
+                                            )
+                        if counter_length_news_title < length_news_title:
+                            counter_length_news_title += 1
+                        if counter_length_news_title == length_news_title:
+                            counter_url_source_all_pages += 1
+                            counter_page_title_all_pages += 1
+                            counter_length_news_title = 0
+                
         except Exception as err:
             print(f"Error while writing data to CSV = {err}")
 
