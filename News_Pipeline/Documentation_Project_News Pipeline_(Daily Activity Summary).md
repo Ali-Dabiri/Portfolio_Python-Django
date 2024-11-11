@@ -187,3 +187,41 @@
     - **CSV Management**: Collected page URLs, titles, and news headlines, and saved them into a structured CSV file.
     - **Enhanced Navigation**: Implemented scrolling functions to ensure complete page loading before data extraction.
     - Defined `scroll_up` function for returning to top of page when necessary.
+
+-----------------------------------------
+#####  2024/11/04 - 1403/08/16
+- **Continued Reuters_Gold_News_Search Project**
+	- **Enhanced Script Update:** Improved script to filter news articles from the last six months, adding article dates to the CSV output for relevance.
+- Set up **Reuters_Gold_News_Search_Content** environment
+    - `py -m venv Reuters_Gold_News_Search_Content`
+    - `pip install selenium`
+    - `pip install webdriver-manager`
+- Initiated Selenium project **Reuters_Gold_News_Search_Content**
+- Reviewed `robots.txt` for reuters.com
+    - URL: `https://www.reuters.com/robots.txt`
+- Added source URL and tested CSV output
+    - Filename: `Reuters_Gold_News_Search_Content_Data.csv`
+- Developed Selenium scraper
+
+-----------------------------------
+
+##### 2024/11/08 - 1403/08/18
+
+- Continued project work on **Reuters_Gold_News_Search_Content**
+    - **Data Extraction**: Successfully collected URL source, page title, date, tags, author, and content.
+
+-------------------------------------
+
+##### 2024/11/09 - 1403/08/19
+
+- Continued project work on **Reuters_Gold_News_Search_Content**
+    - Improved content extraction in `all_news_content_page`.
+
+-----------------------------------------
+
+##### 2024/11/11 - 1403/08/21
+
+- Continued project work on **Reuters_Gold_News_Search_Content**
+    - Attempted to improve cookie handling to load more news with VPN (no successful result).
+
+--------------------------------------
