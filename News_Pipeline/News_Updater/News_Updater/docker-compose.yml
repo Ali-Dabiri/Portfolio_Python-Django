@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: django_app
+    command: gunicorn News_Updater.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6.0-alpine
+    container_name: redis
+
+  celery:
+    build: .
+    container_name: celery_worker
+    command: celery -A News_Updater worker --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  celery-beat:
+    build: .
+    container_name: celery_beat
+    command: celery -A News_Updater beat --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  flower:
+    build: .
+    container_name: celery_flower
+    command: celery -A News_Updater flower
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
