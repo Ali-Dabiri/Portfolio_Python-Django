@@ -225,3 +225,125 @@
     - Attempted to improve cookie handling to load more news with VPN (no successful result).
 
 --------------------------------------
+
+##### 2024/11/13 - 1403/08/23
+
+- **Started the project (News_Updater)**
+- **Created a virtual environment**
+    - `py -m venv News_Updater`
+    - Installed required packages:
+        - `pip install django`
+        - `pip install celery`
+        - `pip install flower`
+        - `pip install redis`
+        - `pip install django-celery-beat`
+- **Started the Django project and app**
+    - `django-admin startproject News_Updater`
+    - `py manage.py startapp News_Updater_App`
+- **Configured settings**
+    - Added `News_Updater_App` to `INSTALLED_APPS`
+- **Studied about**:
+    - Celery
+    - Message Broker:
+        - RabbitMQ
+        - Redis
+            - [Redis documentation for Celery](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html#broker-redis)
+        - Other brokers:
+            - [Celery documentation on brokers](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/index.html#broker-overview)
+    - Sources:
+        - [Celery Documentation](https://docs.celeryq.dev/en/stable/getting-started/introduction.html)
+        - [First steps with Celery](https://docs.celeryq.dev/en/stable/getting-started/first-steps-with-celery.html#first-steps)
+- **Started writing a simple script with Celery**
+- **Installed and activated WSL (Windows Subsystem for Linux)**
+    - `wsl --install`
+- **Installed `redis-server` in WSL**
+    1. `sudo apt update`
+    2. `sudo apt-get install redis-server`
+- **Started `redis-server`**
+    - `redis-server`
+- **Checked Redis setup in WSL**
+    - `redis-cli ping` 
+        - Output ===> `PONG` (executed correctly)
+- Ran:
+    - `celery -A test1celery worker --loglevel=INFO`
+- **Encountered `PermissionError` when running `celery -A test1celery worker --loglevel=INFO`**
+    %% The `PermissionError` usually occurs due to access permission issues or incompatibilities of Python modules like billiard with Windows. %%
+    - **Solution**: `celery -A test1celery worker --loglevel=INFO --pool=solo`
+
+---------------------------
+
+##### 2024/11/14 - 1403/08/24
+
+- Continued studying:
+    - Celery
+    - Sources:
+        - [Next steps with Celery](https://docs.celeryq.dev/en/stable/getting-started/next-steps.html#next-steps)
+- **Getting started with Celery in a Django project**
+
+---------------------------
+
+##### 2024/11/20 - 1403/08/30
+
+- Continued working on the project (News_Updater_App)
+    - Created `celery.py` file
+    - Made changes to `settings.py`
+    - Configured Celery Beat
+        - `python manage.py migrate`
+        - `python manage.py shell`
+            - Running code to create periodic tasks:
+                ```python
+                from django_celery_beat.models import PeriodicTask, IntervalSchedule
+                
+                schedule, created = IntervalSchedule.objects.get_or_create(
+                    every=10,
+                    period=IntervalSchedule.SECONDS,
+                )
+                
+                PeriodicTask.objects.create(
+                    interval=schedule,
+                    name='Update News Periodically',
+                    task='News_Updater_App.tasks.update_news', 
+                )
+                ```
+    - Running Flower:
+        - `celery -A News_Updater flower`
+        - Access via: http://localhost:5555
+- **Created `dockerfile`**
+- **Created `docker-compose.yml`**
+- **Installed Docker Desktop**
+- **Running the project with Docker Compose**
+    - `docker-compose up --build`
+        - Ran `celery -A News_Updater worker --loglevel=INFO` in the Docker environment
+    - Checked process status in Docker:
+        - `docker ps -a`
+- **Installed `iputils-ping` in Docker environment**
+    - `apt-get update && apt-get install iputils-ping -y`
+- **Tested `tasks`**
+    - Ran in the shell:
+        - `from News_Updater_App.tasks import update_news`
+        - `update_news.delay()`
+
+--------------------
+
+##### 2024/11/22 - 1403/09/02
+
+- **Initial testing and implementation (News_Updater_App)** 
+    - `docker build -t news_updater .`
+    - `docker-compose up --build`
+    - Installed `gunicorn`:
+        - `pip install gunicorn`
+    - Checked process status:
+        - `docker ps`
+        - `docker image ls`
+    - Viewed Docker logs:
+        - `docker-compose logs celery`
+    - **Monitored with Flower**
+        - Access via: http://localhost:5555/
+    - Ran in Docker:
+        - `docker-compose exec web python manage.py shell`
+            - Ran:
+                ```python
+                from news_updater.tasks import update_news
+                update_news.delay()
+                ```
+
