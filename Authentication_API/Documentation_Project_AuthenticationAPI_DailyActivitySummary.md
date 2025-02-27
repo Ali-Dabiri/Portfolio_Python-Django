@@ -57,3 +57,102 @@
 - **Continue Project: `Authentication_Token_API`**
 - **Further study HTTP headers and JWT token structure**
 - **Authenticate users using a username and password, verifying the token in the JWT header (via the payload)**
+
+---
+
+
+##### 2025/02/05 - 1403/11/17
+
+- Start Project: RoleBase_API
+- Create a virtual environment:
+    - `py -m venv RoleBase_API`
+- Install required packages:
+    - `pip install Django`
+    - `pip install djangorestframework`
+    - `pip install djangorestframework-simplejwt`
+- Create a Django project:
+    - `django-admin startproject RoleBase_API`
+- Create a Django app:
+    - `django-admin startapp RoleBase_App`
+- Create `serializer.py` and `urls.py` in VSCode Terminal:
+    - `code serializer.py`
+    - `code urls.py`
+
+### Django Configuration
+
+- Configure `settings.py`:
+    - Add installed apps:
+        - `RoleBase_App`
+        - `rest_framework`
+        - `rest_framework_simplejwt`
+- Configure `urls.py` in the Django app:
+    - Import `include` module
+
+### Model and View Definitions
+
+- Define models in `models.py`.
+- Define serializers in `serializer.py`.
+- Define views in `views.py`:
+    - **User Role:**
+        - Signup
+        - Login
+- Define URLs in `urls.py` in the Django app.
+
+### Database Setup
+
+- Create the database based on `models.py`:
+    - `py manage.py makemigrations RoleBase_App`
+- Create tables based on `models.py`:
+    - `py manage.py migrate`
+
+### View Enhancements
+
+- Modify `views.py`:
+    - **Admin Role:**
+        - Display all users
+        - Create users by Admin
+
+### Model Enhancements
+
+- Update `models.py`:
+    - Add a datetime column:
+        - `date_time = models.DateField(auto_now_add=True)`
+- Save changes:
+    - `py manage.py makemigrations RoleBase_App`
+    - `py manage.py migrate`
+- Further improvements to `models.py`:
+    - Add a date column:
+        - `date = models.DateField(auto_now_add=True)`
+    - Add a time column:
+        - `time = models.TimeField(auto_now_add=True)`
+
+### Database Reset
+
+- Delete the database:
+    - `rm db.sqlite3`
+- Delete `0001_initial.py` in the `__pycache__` folder.
+- Save changes:
+    - `py manage.py makemigrations RoleBase_App`
+    - `py manage.py migrate`
+
+### Additional View Enhancements
+
+- Modify `views.py`:
+    - **Manager Role:**
+        - Filter data based on date and time
+
+---
+
+##### 2025/02/09 - 1403/11/20
+
+
+- Continue Project: RoleBase_API
+- Enhance `models.py`:
+    - Add a role column to manage user roles.
+- Improve `views.py`:
+    - Implement user signup and assign roles.
+    - Define a login endpoint to include the `role` parameter in the JWT payload.
+    - Implement an endpoint to show all users (accessible only to Admins with valid JWT authorization).
+    - Allow Admins to create usernames and passwords for roles `admin` and `users` (with role validation in JWT authorization for security).
+- Further enhancements to `views.py`:
+    - Add filters for date and time ranges (restricted to Managers with valid role authorization in JWT payload).
